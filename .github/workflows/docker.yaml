@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on: 
+  push:
+    branches: []
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    name: Docker Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Lint
+      uses: hadolint/hadolint:latest-alpine
+      run: |
+        hadolint Dockerfile
