@@ -23,11 +23,11 @@ jobs:
         include:
           - image: "Database"
             needs: []
-            dockerfile: Dockerfile
+            dockerfile: db/Dockerfile
           - site: "Application"
             needs: 
               - build_app
-            dockerfile: db/Dockerfile
+            dockerfile: Dockerfile
 
     steps:
     - uses: actions/checkout@v4
