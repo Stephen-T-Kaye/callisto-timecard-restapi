@@ -9,6 +9,7 @@ on:
 
 jobs:
   build_app:
+    name: Build Application
     runs-on: ubuntu-latest
 
     permissions:
