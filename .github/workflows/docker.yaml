@@ -8,15 +8,29 @@ on:
       - main
 
 jobs:
-
-  build:
-    name: Docker Lint
-
+  build_app:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+  build_images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - image: "Database"
+            needs: []
+            dockerfile: Dockerfile
+          - site: "Application"
+            needs: 
+              - build_app
+            dockerfile: db/Dockerfile
 
     steps:
     - uses: actions/checkout@v4
-    - name: Lint
-      uses: hadolint/hadolint:latest-alpine
-      run: |
-        hadolint Dockerfile
+    - name: Lint ${{ matrix.image }} Docker
+      uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
