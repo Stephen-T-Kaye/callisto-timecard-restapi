@@ -32,5 +32,5 @@ jobs:
     - uses: actions/checkout@v4
     - name: Lint ${{ matrix.image }} Docker
       uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: ${{ matrix.dockerfile }}
+      with:
+        dockerfile: ${{ matrix.dockerfile }}
