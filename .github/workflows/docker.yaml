@@ -34,11 +34,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn -s ./timecard_settings.xml clean verify
 
-    # - name: Scan with SonarCloud
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    #     SONAR_HOST: https://sonarcloud.io
-    #   run: mvn sonar:sonar --file pom.xml -Dsonar.host.url=$SONAR_HOST -Dsonar.token=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
+      - name: Scan with SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST: https://sonarcloud.io
+        run: mvn sonar:sonar --file pom.xml -Dsonar.host.url=$SONAR_HOST -Dsonar.token=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
 
   build_images:
     name: Build Docker Images
