@@ -54,17 +54,15 @@ jobs:
       matrix:
         include:
           - image: "Database"
-            needs: []
             artifact: false
             dockerfile: db/Dockerfile
           - site: "Application"
-            needs:
-              - build_app
-            artifact:
+            artifact: 
               name: jar-file
               path: "*.jar"
             dockerfile: Dockerfile
-    needs: ${{ matrix.needs }}
+    needs:
+      - build_app
     steps:
       - uses: actions/checkout@v4
 
