@@ -53,11 +53,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: "Database"
+          - image: "callisto-timecard-database"
             artifact: false
             dockerfile: db/Dockerfile
             context: "./db"
-          - site: "Application"
+          - image: "callisto-timecard-application"
             artifact: 
               name: jar-file
               path: "target/application.jar"
@@ -98,7 +98,7 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           # push: true
-          tags: ${{ steps.docker_tag.outputs.DOCKER_TAG }}
+          tags: user/${{ matrix.image }}:${{ steps.docker_tag.outputs.DOCKER_TAG }}
 
   helm:
     name: Build Helm Charts
