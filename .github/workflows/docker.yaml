@@ -62,7 +62,7 @@ jobs:
               - build_app
             artifact:
               name: jar-file
-              path: *.jar
+              path: "*.jar"
             dockerfile: Dockerfile
 
     steps:
