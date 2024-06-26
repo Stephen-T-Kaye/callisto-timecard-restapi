@@ -56,11 +56,13 @@ jobs:
           - image: "Database"
             artifact: false
             dockerfile: db/Dockerfile
+            context: "./db"
           - site: "Application"
             artifact: 
               name: jar-file
-              path: "application.jar"
+              path: "target/application.jar"
             dockerfile: Dockerfile
+            context: "."
     needs:
       - build_app
     steps:
@@ -77,7 +79,26 @@ jobs:
         with:
           name: ${{ matrix.artifact.name }}
           path: ${{ matrix.artifact.path }}
-      - run: ls
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Calculate Docker Tag
+        id: docker_tag
+        run: |
+          BRANCH=$(echo $GITHUB_REF_NAME | tr '[:lower:]' '[:upper:]') && [[ $BRANCH =~ (SK-[0-9]*) ]] && dockerTag=${match/#E/-E}${BASH_REMATCH/#E/-E}
+          echo "DOCKER_TAG=${dockerTag}" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          # push: true
+          tags: ${{ steps.docker_tag.outputs.DOCKER_TAG }}
 
   helm:
     name: Build Helm Charts
