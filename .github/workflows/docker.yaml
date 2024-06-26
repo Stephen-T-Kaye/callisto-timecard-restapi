@@ -40,6 +40,11 @@ jobs:
           SONAR_HOST: https://sonarcloud.io
         run: mvn sonar:sonar --file pom.xml -Dsonar.host.url=$SONAR_HOST -Dsonar.token=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jar-file
+          path: target/*.jar
+
   build_images:
     name: Build Docker Images
     runs-on: ubuntu-latest
@@ -50,18 +55,31 @@ jobs:
         include:
           - image: "Database"
             needs: []
+            artifact: false
             dockerfile: db/Dockerfile
           - site: "Application"
             needs:
               - build_app
+            artifact:
+              name: jar-file
+              path: *.jar
             dockerfile: Dockerfile
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Lint ${{ matrix.image }} Docker
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ matrix.dockerfile }}
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        if: ${{ matrix.image != false  }}
+        with:
+          name: ${{ matrix.artifact.name }}
+          path: ${{ matrix.artifact.path }}
+      - run: ls
 
   helm:
     name: Build Helm Charts
