@@ -64,7 +64,7 @@ jobs:
               name: jar-file
               path: "*.jar"
             dockerfile: Dockerfile
-
+    needs: ${{ matrix.needs }}
     steps:
       - uses: actions/checkout@v4
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: Download artifact
         uses: actions/download-artifact@v4
-        if: ${{ matrix.image != false  }}
+        if: ${{ matrix.artifact != false  }}
         with:
           name: ${{ matrix.artifact.name }}
           path: ${{ matrix.artifact.path }}
