@@ -59,7 +59,7 @@ jobs:
           - site: "Application"
             artifact: 
               name: jar-file
-              path: "*.jar"
+              path: "application.jar"
             dockerfile: Dockerfile
     needs:
       - build_app
