@@ -7,6 +7,9 @@ on:
     branches:
       - main
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   build_app:
     name: Build Application
@@ -48,6 +51,12 @@ jobs:
   build_images:
     name: Build Docker Images
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -92,13 +101,31 @@ jobs:
           BRANCH=$(echo $GITHUB_REF_NAME | tr '[:lower:]' '[:upper:]') && [[ $BRANCH =~ (SK-[0-9]*) ]] && dockerTag=${match/#E/-E}${BASH_REMATCH/#E/-E}
           echo "DOCKER_TAG=${dockerTag}" >> $GITHUB_OUTPUT
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push
+        id: push
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
-          # push: true
-          tags: user/${{ matrix.image }}:${{ steps.docker_tag.outputs.DOCKER_TAG }}
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ matrix.image }}:${{ steps.docker_tag.outputs.DOCKER_TAG }}
+            ${{ env.REGISTRY }}/${{ matrix.image }}:${{ env.GITHUB_SHA }}
+
+      - name: Generate artifact attestation
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ matrix.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
 
   helm:
     name: Build Helm Charts
