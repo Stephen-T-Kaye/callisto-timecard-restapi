@@ -124,7 +124,9 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           push: ${{ github.event_name == 'push' }}
-          tags: "${{ env.REGISTRY }}/${{ matrix.image }}:${{ github.sha }}"
+          tags: |
+            "${{ env.REGISTRY }}/${{ matrix.image }}:${{ steps.docker_tag.outputs.DOCKER_TAG }}"
+            "${{ env.REGISTRY }}/${{ matrix.image }}:${{ github.sha }}"
 
       - name: Generate artifact attestation
         if: ${{ github.event_name == 'push' }}
