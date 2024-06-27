@@ -127,13 +127,13 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
-          push: ${{ github.event_name == 'push' }}
+          push: ${{ github.event_name == 'push' && steps.docker_tag.outputs.DOCKER_TAG != '' }}
           tags: |
             ${{ env.REGISTRY }}/${{ matrix.image }}:${{ github.sha }}
             ${{ steps.docker_tag.outputs.DOCKER_TAG && format('{0}/{1}:{2}', env.REGISTRY, matrix.image, steps.docker_tag.outputs.DOCKER_TAG) || '' }}
 
       - name: Generate artifact attestation
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && steps.docker_tag.outputs.DOCKER_TAG != '' }}
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ matrix.image }}
