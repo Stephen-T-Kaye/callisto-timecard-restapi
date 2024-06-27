@@ -8,7 +8,7 @@ on:
       - main
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/stephen-t-kaye
 
 jobs:
   build_app:
