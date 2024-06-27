@@ -18,7 +18,7 @@
         <repository>
             <id>github-packages</id>
             <name>Callisto github packages</name>
-            <url>https://maven.pkg.github.com/UKHomeOffice/*</url>
+            <url>https://maven.pkg.github.com/Stephen-T-Kaye/*</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -38,6 +38,10 @@
         <cucumber.version>7.8.1</cucumber.version>
         <jparest.version>0.1.14</jparest.version>
         <kafka.commons.version>0.2.0</kafka.commons.version>
+        <!-- Sonar Properties -->
+        <sonar.organization>stephen-t-kaye</sonar.organization>
+        <sonar.projectKey>stephen-t-kaye_callisto-timecard-restapi</sonar.projectKey>
+        <sonar.projectName>stephen-t-kaye_callisto-timecard-restapi</sonar.projectName>
     </properties>
 
     <dependencyManagement>
