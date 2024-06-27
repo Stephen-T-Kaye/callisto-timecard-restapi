@@ -99,9 +99,11 @@ jobs:
         id: docker_tag
         run: |
           BRANCH=$(echo $GITHUB_REF_NAME | tr '[:lower:]' '[:upper:]') && [[ $BRANCH =~ (SK-[0-9]*) ]] && dockerTag=${match/#E/-E}${BASH_REMATCH/#E/-E}
-          echo dockerTag
-          echo ${dockerTag}
-          echo "DOCKER_TAG=${dockerTag}" >> $GITHUB_OUTPUT
+          if [[ -z ${dockerTag} ]]; then
+            echo "DOCKER_TAG=${dockerTag}" >> $GITHUB_OUTPUT
+          else if [[ "" == "main" ]]; then
+            echo "DOCKER_TAG=latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check Docker Tag
         id: docker_tag_check
@@ -124,7 +126,7 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           tags: |
             "${{ env.REGISTRY }}/${{ matrix.image }}:${{ steps.docker_tag.outputs.DOCKER_TAG }}"
-            "${{ env.REGISTRY }}/${{ matrix.image }}:${GITHUB_SHA}"
+            "${{ env.REGISTRY }}/${{ matrix.image }}:${{ github.sha }}"
 
       - name: Generate artifact attestation
         if: ${{ github.event_name == 'push' }}
