@@ -39,7 +39,7 @@ jobs:
       - name: Build with Maven
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn -s ./timecard_settings.xml clean verify
+        run: mvn -s ./ci_settings.xml clean verify
 
       - name: Scan with SonarCloud
         env:
