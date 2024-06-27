@@ -101,7 +101,7 @@ jobs:
           BRANCH=$(echo $GITHUB_REF_NAME | tr '[:lower:]' '[:upper:]') && [[ $BRANCH =~ (SK-[0-9]*) ]] && dockerTag=${match/#E/-E}${BASH_REMATCH/#E/-E}
           if [[ -z ${dockerTag} ]]; then
             echo "DOCKER_TAG=${dockerTag}" >> $GITHUB_OUTPUT
-          else if [[ "" == "main" ]]; then
+          elif [[ "$GITHUB_REF_NAME" == "main" ]]; then
             echo "DOCKER_TAG=latest" >> $GITHUB_OUTPUT
           fi
 
