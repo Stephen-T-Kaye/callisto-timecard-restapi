@@ -10,6 +10,10 @@ on:
 env:
   REGISTRY: ghcr.io/stephen-t-kaye
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   build_app:
     name: Build Application
