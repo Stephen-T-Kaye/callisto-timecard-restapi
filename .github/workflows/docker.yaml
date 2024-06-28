@@ -73,7 +73,7 @@ jobs:
           - image: "callisto-timecard-application"
             artifact: 
               name: jar-file
-              path: "target/application.jar"
+              path: "target"
             dockerfile: Dockerfile
             context: "."
     needs:
