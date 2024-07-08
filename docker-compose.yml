@@ -31,7 +31,7 @@ services:
       SPRING_APPLICATION_JSON: '{
         "spring.kafka.ssl.trust-store-location": "file://keystore/timecard-restapi/timecard-restapi.truststore.jks",
         "spring.kafka.ssl.trust-store-password": "changeit"
-      }'
+        }'
     depends_on:
       - timecard-database-migrations
     networks:
